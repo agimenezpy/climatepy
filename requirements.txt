@@ -1,0 +1,5 @@
+Shapely==1.5.5
+Fiona==1.4.8
+matplotlib==1.4.2
+numpy==1.9.1
+scipy==0.15.0
