@@ -6,6 +6,7 @@ import time
 
 __author__ = 'agimenez'
 
+
 def collect_files(file_names):
     for file_name in file_names:
         yield BinFile(file_name)

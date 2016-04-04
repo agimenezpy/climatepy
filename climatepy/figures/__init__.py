@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+import os.path as pth
+import matplotlib.pyplot as plt
+
 __author__ = 'agimenez'
 
 __all__ = ["MPLMap", "DateLineGraph", "StyleMixin", "DrawMixin", "MonthLineGraph"]
@@ -6,9 +10,6 @@ FIGURE_SIZE = [10.24, 7.68]
 FONT_SIZE = "medium"
 FONT_NAME = "Trebuchet MS"
 FORMAT = "png"
-
-import os.path as pth
-import matplotlib.pyplot as plt
 
 
 class Style(object):

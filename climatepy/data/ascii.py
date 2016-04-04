@@ -1,6 +1,16 @@
 __author__ = 'agimenez'
 
+
 def export_ascii(filename, data, lats, lons):
+    """
+    Exports an array of data to ASCII
+
+    :param filename: output filename
+    :param data: array of data
+    :param lats: latitude coordinates
+    :param lons: longitude coordinates
+    :return:
+    """
     ascw = open(filename+".asc", "w")
     ascw.write("""ncols %d
 nrows %d

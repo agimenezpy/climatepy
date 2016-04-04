@@ -1,5 +1,4 @@
-__author__ = 'agimenez'
-
+# -*- coding: utf-8 -*-
 import fiona
 import numpy as np
 import os.path as pth
@@ -9,12 +8,13 @@ import cPickle as pkl
 import math
 from collections import OrderedDict
 
+__author__ = 'agimenez'
+
 
 class ShapeMask(object):
 
     def __init__(self, source, key, lons, lats, cell_size=0.5, cached=True,
                  save=True):
-
         directory = pth.dirname(source)
         name, ext = pth.splitext(source)
         self.cache = []

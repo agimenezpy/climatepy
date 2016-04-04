@@ -16,6 +16,7 @@ rcParams['xtick.labelsize'] = "small"
 
 __author__ = 'agimenez'
 
+
 class BaseMap(StyleMixin, DrawMixin):
     __metaclass__ = abc.ABCMeta
 

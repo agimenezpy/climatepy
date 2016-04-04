@@ -5,6 +5,7 @@ import numpy as np
 
 __author__ = 'agimenez'
 
+
 class File(object):
     def __init__(self, fullpath):
         self.name = os.path.basename(fullpath)
@@ -81,6 +82,7 @@ class CtlConfig(object):
             "varr": [v.to_dict() for v in self.vars] or None,
             "options": self.options or None
         }
+
 
 class CtlVar(object):
     name = ""

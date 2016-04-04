@@ -10,6 +10,7 @@ __author__ = 'agimenez'
 
 logging.basicConfig(level=logging.INFO)
 
+
 class TestReadBinary(unittest.TestCase):
 
     def setUp(self):
