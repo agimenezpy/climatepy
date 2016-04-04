@@ -12,7 +12,8 @@ from collections import OrderedDict
 
 class ShapeMask(object):
 
-    def __init__(self, source, key, lons, lats, cell_size=0.5, cached=True, save=True):
+    def __init__(self, source, key, lons, lats, cell_size=0.5, cached=True,
+                 save=True):
 
         directory = pth.dirname(source)
         name, ext = pth.splitext(source)
@@ -73,7 +74,8 @@ class ShapeMask(object):
             px, py = -1, -1
             center = geom.centroid
             val = 999
-            log.info("Generating mask for %s-%s %r" % (geom.geom_type, shape['id'], bounds))
+            log.info("Generating mask for %s-%s %r" % (geom.geom_type,
+                                                       shape['id'], bounds))
             for y, lat in enumerate(self.dims[0]):
                 for x, lon in enumerate(self.dims[1]):
                     if lat < bounds[1] or lat > bounds[3]:
@@ -81,7 +83,8 @@ class ShapeMask(object):
                     if lon < bounds[0] or lon > bounds[2]:
                         continue
                     point = slygeo.Point(lon, lat)
-                    poly = point.buffer(self.cell_size, cap_style=slygeo.CAP_STYLE.square)
+                    poly = point.buffer(self.cell_size,
+                                        cap_style=slygeo.CAP_STYLE.square)
                     if geom.contains(poly) or geom.intersects(poly):
                         mask[y, x] = False
                         is_mask = True
@@ -96,7 +99,8 @@ class ShapeMask(object):
                 log.warn("Mascara no generada para %s" % shape["id"])
             log.info("%d values" % len(mask[mask == False]))
         else:
-            raise Exception("Geometry %s not valid for computing mask" % geom.geom_type)
+            raise Exception("Geometry %s not valid for computing mask" %
+                            geom.geom_type)
         return mask
 
     def __len__(self):

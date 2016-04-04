@@ -1,18 +1,20 @@
-__author__ = 'agimenez'
+# -*- coding: utf-8 -*-
 import unittest
-import sys
 import struct
 import logging
 import cdms2
 import os
 import numpy as np
 
+__author__ = 'agimenez'
+
 logging.basicConfig(level=logging.INFO)
 
 class TestReadBinary(unittest.TestCase):
 
     def setUp(self):
-        filename = "/Users/agimenez/Desktop/ProyectoCC/escenarios/ETA/Eta_10km/1961_2005/Diario/Temp/Eta_HG2ES_RCP45_10km_Temp_Diaria_19610101"
+        filename = "/Users/agimenez/Desktop/ProyectoCC/escenarios/ETA/Eta_10km/1961_2005/" \
+                   "Diario/Temp/Eta_HG2ES_RCP45_10km_Temp_Diaria_19610101"
         self.bindata = open(filename + ".bin", "r")
         self.FILESIZE = os.path.getsize(filename + ".bin")
         self.dset = cdms2.open(filename+".ctl")

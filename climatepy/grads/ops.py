@@ -1,9 +1,10 @@
-__author__ = 'agimenez'
+# -*- coding: utf-8 -*-
 import numpy as np
-
 from climatepy.grads.files import BinFile, CtlFile
 import logging as log
 import time
+
+__author__ = 'agimenez'
 
 def collect_files(file_names):
     for file_name in file_names:

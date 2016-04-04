@@ -1,9 +1,9 @@
-__author__ = 'agimenez'
-
+# -*- coding: utf-8 -*-
 import os
 import logging as log
 import numpy as np
 
+__author__ = 'agimenez'
 
 class File(object):
     def __init__(self, fullpath):

@@ -1,10 +1,12 @@
-__author__ = 'agimenez'
+# -*- coding: utf-8 -*-
 from climatepy.data.dataset import Dataset
 from climatepy.data.shape import ShapeMask
 import getopt
 import numpy as np
 import logging as log
 import unittest
+
+__author__ = 'agimenez'
 
 TEST_DS = "/Users/agimenez/Desktop/ProyectoCC/escenarios/ETA/Eta_10km/" \
           "Mensual/Prec/Eta_HG2ES_RCP45_10km_Prec_Mensual_template.ctl"

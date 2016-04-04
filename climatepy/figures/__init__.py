@@ -60,7 +60,7 @@ class DrawMixin(object):
 
     def draw(self, file_name, show=False):
         if not show and not pth.exists(file_name):
-            plt.savefig(file_name + "." + FORMAT)
+            plt.savefig(file_name + "." + FORMAT, bbox_inches='tight')
         else:
             plt.show()
 

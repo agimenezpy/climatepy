@@ -1,18 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import numpy
+from scipy.optimize.minpack import leastsq
+
 """Fit 1D-data to arbitrary specified objective function.
 Copyright (C) 2008 Jochen K�pper
 """
 __author__ = "Jochen K�pper"
 __version__ = "1.0 (03.10.2008)"
-
-import sys
-import numpy
-import scipy
-import scipy.optimize
-from scipy.optimize.minpack import leastsq
-import matplotlib.pyplot as matplot
-import pylab
 
 # various functions
 def single_exponential(A, t):

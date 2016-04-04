@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'agimenez'
 import matplotlib.pyplot as plt
 from matplotlib.dates import YearLocator, DateFormatter
 import datetime
@@ -9,6 +8,9 @@ from climatepy.figures import StyleMixin, DrawMixin
 from calendar import month_name
 import locale
 import sys
+
+__author__ = 'agimenez'
+
 
 class LineGraph(StyleMixin, DrawMixin):
     __metaclass__ = abc.ABCMeta
