@@ -11,8 +11,7 @@ def collect_files(file_names):
     for file_name in file_names:
         yield BinFile(file_name)
 
-
-def avg_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
+def collect_data(file_names, rows, cols, vars_n=1, dim=1):
     files = collect_files(file_names)
     if dim == 1:
         dims = (rows*cols*vars_n,)
@@ -32,7 +31,24 @@ def avg_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
         accumulator = accumulator + data
         count += 1
     log.info("Procesando %d archivo(s) en %.2f segundos" % (count, time.time() - t_s))
+    return accumulator
 
+def sum_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
+    accumulator = collect_data(file_names, rows, cols, vars_n, dim)
+
+    count = len(file_names)
+    if count > 1:
+        out_obj = BinFile(out_file)
+        out_obj.save(accumulator)
+
+        if config and not config.template:
+            out_ctl = CtlFile(out_file)
+            out_ctl.save(**config.to_dict())
+
+def avg_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
+    accumulator = collect_data(file_names, rows, cols, vars_n, dim)
+
+    count = len(file_names)
     if count > 1:
         out_obj = BinFile(out_file)
         out_obj.save(accumulator / count)
