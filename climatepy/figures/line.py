@@ -37,7 +37,7 @@ class DateLineGraph(LineGraph):
         self.clear()
 
     def add_legend(self, legend, alpha=1):
-        leg = self.axes.legend(legend, "upper center", shadow=True)
+        leg = self.axes.legend(loc="upper center", shadow=True)
         leg.get_frame().set_alpha(alpha)
 
     def set_title(self, in_str):
@@ -68,8 +68,8 @@ class DateLineGraph(LineGraph):
         self.figure.suptitle(self.title, **DateLineGraph.style("suptitle"))
         self.axes.grid(True)
 
-    def add_line(self, data, color='k', style='-'):
-        self.axes.plot_date(self.dates[:len(data)], data, color + style)
+    def add_line(self, data, color='k', style='-', **kwargs):
+        self.axes.plot_date(self.dates[:len(data)], data, color + style, **kwargs)
 
 
 class MonthLineGraph(LineGraph):

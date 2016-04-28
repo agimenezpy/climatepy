@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import cdms2
 
 __author__ = 'agimenez'
 
@@ -22,6 +21,7 @@ class Dataset(object):
         Returns a dataset descriptor
         :return:
         """
+        import cdms2
         self.ds = cdms2.open(self.filename, 'r')
         return self.ds
 

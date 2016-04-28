@@ -8,7 +8,7 @@ __all__ = ["MPLMap", "DateLineGraph", "StyleMixin", "DrawMixin", "MonthLineGraph
 
 FIGURE_SIZE = [10.24, 7.68]
 FONT_SIZE = "medium"
-FONT_NAME = "Trebuchet MS"
+FONT_NAME = "serif"
 FORMAT = "png"
 
 

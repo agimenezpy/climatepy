@@ -2,8 +2,10 @@
 import matplotlib.cm as cmap
 import matplotlib.pyplot as plt
 import mpl_toolkits.basemap as bmap
+from shapely.geometry import shape
 from climatepy.figures import (StyleMixin, DrawMixin, FIGURE_SIZE, FONT_NAME,
                                FONT_SIZE, FORMAT)
+from os import path as pth
 import numpy as np
 import abc
 import fiona
@@ -66,10 +68,20 @@ class MPLMap(BaseMap):
     def draw_points(self, file_name, field_name, points=False, sty=None):
         if sty is None:
             sty = MPLMap.style("shapetext")
-        with fiona.open(file_name + "_pt.shp") as shp:
+        if pth.exists(file_name + "_pt.shp"):
+            points = True
+            file_name += "_pt.shp"
+        else:
+            points = False
+            file_name += ".shp"
+        with fiona.open(file_name) as shp:
             for row in shp:
                 geom = row["geometry"]
-                x, y = geom["coordinates"][0], geom["coordinates"][1]
+                if points:
+                    x, y = geom["coordinates"][0], geom["coordinates"][1]
+                else:
+                    geom = shape(geom).centroid
+                    x, y = geom.xy[0], geom.xy[1]
                 if (x < self.bounds[0] or x > self.bounds[2]) or \
                         (y < self.bounds[1] or y > self.bounds[3]):
                     continue
@@ -89,7 +101,7 @@ class MPLMap(BaseMap):
             levels = self.levels
 
         color_map = self.color_map
-        if not alt:
+        if alt:
             color_map = self.alt_color_map
         cs = self.axes.contourf(x, y, data, levels, cmap=color_map,
                                 extend=extend)
