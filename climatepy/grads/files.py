@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from six import u
 import os
 import logging as log
 import numpy as np
-
+import io
 __author__ = 'agimenez'
 
 
@@ -163,6 +164,6 @@ ENDVARS
             opts = tmpl_values.pop("options")
             tmpl_values["options"] = "OPTIONS " + (" ".join(opts)) if opts and len(opts) > 0 else ""
 
-        with open(self.path, "w") as fdesc:
-            fdesc.write(self.template.format(**tmpl_values))
+        with io.open(self.path, "w", newline='') as fdesc:
+            fdesc.write(u(self.template.format(**tmpl_values)))
             log.info("Saving file %s with size %d" % (self.name, os.path.getsize(self.path)))

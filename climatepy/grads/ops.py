@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import numpy as np
-from climatepy.grads.files import BinFile, CtlFile
 import logging as log
 import time
+
+import numpy as np
+
+from climatepy.grads.files import BinFile
 
 __author__ = 'agimenez'
 
@@ -10,6 +12,7 @@ __author__ = 'agimenez'
 def collect_files(file_names):
     for file_name in file_names:
         yield BinFile(file_name)
+
 
 def collect_data(file_names, rows, cols, vars_n=1, dim=1):
     files = collect_files(file_names)
@@ -31,31 +34,20 @@ def collect_data(file_names, rows, cols, vars_n=1, dim=1):
         accumulator = accumulator + data
         count += 1
     log.info("Procesando %d archivo(s) en %.2f segundos" % (count, time.time() - t_s))
-    return accumulator
+    return accumulator, count
 
-def sum_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
-    accumulator = collect_data(file_names, rows, cols, vars_n, dim)
 
-    count = len(file_names)
-    if count > 1:
-        out_obj = BinFile(out_file)
-        out_obj.save(accumulator)
+def sum_data(file_names, rows, cols, vars_n=1, dim=1, config=None):
+    acc, count = collect_data(file_names, rows, cols, vars_n, dim)
 
-        if config and not config.template:
-            out_ctl = CtlFile(out_file)
-            out_ctl.save(**config.to_dict())
+    return acc
 
-def avg_data(file_names, out_file, rows, cols, vars_n=1, dim=1, config=None):
-    accumulator = collect_data(file_names, rows, cols, vars_n, dim)
 
-    count = len(file_names)
-    if count > 1:
-        out_obj = BinFile(out_file)
-        out_obj.save(accumulator / count)
+def avg_data(file_names, rows, cols, vars_n=1, dim=1, config=None):
+    acc, count = collect_data(file_names, rows, cols, vars_n, dim)
 
-        if config and not config.template:
-            out_ctl = CtlFile(out_file)
-            out_ctl.save(**config.to_dict())
+    return acc / count
+
 
 def crop(file_name, out_file, rows, cols, vars_n=1, dim=1, config=None):
     pass

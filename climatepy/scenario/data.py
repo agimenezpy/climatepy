@@ -1,17 +1,19 @@
-import os
-from glob import glob
-from os import path as pth
-import sys
-import cdms2
-from climatepy.scenario import REMOTE_URL
-from climatepy.data import Dataset
 import ConfigParser as cfgParser
 import logging as log
+import os
+import sys
+from glob import glob
+from os import path as pth
+
+from climatepy.data import Dataset
+from climatepy.scenario import REMOTE_URL
 
 __author__ = 'agimenez'
 
+
 def get_remote_file(filename):
     return REMOTE_URL + "escenarios/ETA/" + ("/".join(filename.split(os.sep)[-4:]))
+
 
 def get_data(filename, extent, year_ini, year_end, yearly=True):
     bound_lat = (extent[0][1], extent[1][1])
@@ -50,7 +52,7 @@ def get_data(filename, extent, year_ini, year_end, yearly=True):
             data *= 1000  # To mm/day
         elif varname == 'pre':
             data /= 30  # To mm/day
-        elif varname == 'tp2m':
+        elif varname in ('tp2m', 'mntp', 'mxtp') and data.max() > 200:
             data -= 273  # To Celsius
     out_dict['var'] = varname
     return out_dict, data
@@ -102,6 +104,7 @@ def get_data_wrapper(filename, extent, year_ini, year_end, files, yearly=True,
         def wrap_args(*args):
             config = cfgParser.ConfigParser()
             config.read(filename)
+            out_dict = {}
             for data_file in files:
                 if remote:
                     url_file = REMOTE_URL + data_file
