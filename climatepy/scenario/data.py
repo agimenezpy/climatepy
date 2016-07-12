@@ -118,6 +118,7 @@ def get_data_wrapper(filename, extent, year_ini, year_end, files, yearly=True,
         return wrap_args
     return wrapper
 
+
 def with_config(filename, year_ini, year_end):
     def wrapper(fnc):
         def wrap_args(*args):

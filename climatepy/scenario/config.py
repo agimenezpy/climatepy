@@ -5,12 +5,9 @@ __author__ = 'agimenez'
 
 YEARS = (1961, 2070)
 
-config_20km_rcp45 = CtlConfig()
-config_20km_rcp85 = CtlConfig()
+config_20km_rcp45,  config_20km_rcp85 = CtlConfig(), CtlConfig()
 prec_var = CtlVar()
-temp_var = CtlVar()
-tmin_var = CtlVar()
-tmax_var = CtlVar()
+temp_var, tmin_var, tmax_var = CtlVar(), CtlVar(), CtlVar()
 
 config_20km_rcp45.grid_x = 166
 config_20km_rcp45.grid_y = 135
@@ -36,7 +33,7 @@ prec_var.name = "PREC"
 prec_var.low = 0
 prec_var.high = 99
 prec_var.desc = "Total Precipitation"
-prec_var.unit = "(mm/day)"
+prec_var.unit = "(mm/mes)"
 
 temp_var.name = "TP2M"
 tmin_var.name = "MNTP"
@@ -47,4 +44,3 @@ temp_var.unit = tmin_var.unit = tmax_var.unit = "(C)"
 temp_var.desc = "Shelter Temperature"
 tmin_var.desc = "Min Temperature"
 tmax_var.desc = "Max Temperature"
-

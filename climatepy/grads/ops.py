@@ -37,13 +37,13 @@ def collect_data(file_names, rows, cols, vars_n=1, dim=1):
     return accumulator, count
 
 
-def sum_data(file_names, rows, cols, vars_n=1, dim=1, config=None):
+def sum_data(file_names, rows, cols, vars_n=1, dim=1):
     acc, count = collect_data(file_names, rows, cols, vars_n, dim)
 
     return acc
 
 
-def avg_data(file_names, rows, cols, vars_n=1, dim=1, config=None):
+def avg_data(file_names, rows, cols, vars_n=1, dim=1):
     acc, count = collect_data(file_names, rows, cols, vars_n, dim)
 
     return acc / count

@@ -32,5 +32,6 @@ def iter_dir(dir_name, criteria):
                             key=pth.basename):
         yield file_name
 
+
 def empty(dir_name):
     return len(os.listdir(dir_name)) == 0

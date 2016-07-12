@@ -152,9 +152,9 @@ ENDVARS
         tmpl_values.update(kwargs or {})
 
         if tmpl_values.get("varr", False):
-            vars = tmpl_values.pop("varr")
+            all_vars = tmpl_values.pop("varr")
             extras = []
-            for var in vars:
+            for var in all_vars:
                 kvar = self.var_values.copy()
                 kvar.update(var or {})
                 extras.append(self.var_tmpl.format(**var))
