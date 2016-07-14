@@ -83,7 +83,7 @@ class ShapeMask(object):
             center = geom.centroid
             val = 999
             log.debug("Generating mask for %s-%s (%s) %r", geom.geom_type,
-                       shape['id'], alt_key, bounds)
+                      shape['id'], alt_key, bounds)
             for y, lat in enumerate(self.dims[0]):
                 for x, lon in enumerate(self.dims[1]):
                     if lat < bounds[1] or lat > bounds[3]:

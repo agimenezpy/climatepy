@@ -13,8 +13,9 @@ __licence__ = 'GPL'
 class ApplicationException(Exception):
     pass
 
+
 def export_to(source_ds, source_shp, out_file, var_name, year_end=None,
-              extent=PARAGUAY,  mask_key="%(PART)s", cell_size=0.1):
+              extent=PARAGUAY,  mask_key="%(PART)s", cell_size=0.1, mult=1, delta=0):
     mascara = None
     if pth.exists(out_file):
         os.unlink(out_file)
@@ -23,7 +24,7 @@ def export_to(source_ds, source_shp, out_file, var_name, year_end=None,
         log.info("Procesando %s", var_name)
         if not cur_var:
             raise ApplicationException("Variable name should be provided")
-        with open(out_file, "w") as cvs_output:
+        with open(out_file, "wb") as cvs_output:
             csv_writer = csv.writer(cvs_output)
             time_array = cur_var.getTime().asComponentTime()
             for time_idx, cur_time in enumerate(time_array):
@@ -35,10 +36,7 @@ def export_to(source_ds, source_shp, out_file, var_name, year_end=None,
                 data = dataset(cur_var.id, squeeze=1, time=cur_time, 
                                latitude=bound_lat, longitude=bound_lon)
 
-                if cur_var.id == 'prec':
-                    data *= 1000  # To mm/day
-                else:
-                    data -= 273  # To Celsius
+                data = data*mult + delta
 
                 if not mascara:
                     # Cell size of ETA 0.1

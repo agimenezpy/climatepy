@@ -9,6 +9,7 @@ from climatepy.analysis.regression import aproximate
 
 __author__ = 'agimenez'
 
+
 def normalize(file_path):
     return pth.splitext(pth.basename(file_path))[0]
 
@@ -22,6 +23,7 @@ def get_names(source_shp, columns, map_key, name_prop):
 
     names = [names_dict[claves].encode("utf-8") for claves in columns]
     return names
+
 
 def create_output_shp(source_shp, source_data, dest_dir):
     dest_shp = pth.join(dest_dir, normalize(source_shp).split("_")[0]
@@ -70,6 +72,7 @@ def create_montly_xls(source_data, source_shp, dest_dir, map_key, name_prop):
                                     (data.index.year <= period[1])]
             subset = data.loc[time_frame.values, :]
             subset.to_excel(writer, sheet_name="%d_%d" % period)
+
 
 def create_yearly_xls(source_data, source_shp, dest_dir, map_key, name_prop):
     dest_xls = pth.join(dest_dir, normalize(source_data) + ".xlsx")

@@ -39,6 +39,7 @@ def copy_schema(schema):
     return {"properties": OrderedDict(schema_list),
             "geometry": "Polygon"}
 
+
 def simplify(source_shp, delete=True):
     dest_shp = pth.join(pth.dirname(source_shp),
                         pth.splitext(pth.basename(source_shp))[0] + "_sp.shp")
