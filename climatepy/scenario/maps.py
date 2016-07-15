@@ -10,9 +10,11 @@ from climatepy.figures import MPLMap
 
 __author__ = 'agimenez'
 
+
 def get_grid(data_file, extent, year_ini, year_end):
     out_dict, data = get_data(data_file, extent, year_ini, year_end)
     return data.getGrid()
+
 
 def draw_base(filename, data_file, extent, year_ini, year_end,
               shape_file, shape_title, out_dir, to_grid=None):
@@ -27,13 +29,14 @@ def draw_base(filename, data_file, extent, year_ini, year_end,
 
     var_name = out_dict['var'].upper()
     out_tmpl = config.get("COMMON", 'out_tmpl', True)
-    if var_name == "PRE":
-        data *= 365
+    # to mm/year
+    if var_name.startswith("PRE"):
+        data *= 12
     if len(data.shape) > 2:
         avg = np.average(data, axis=0)
     else:
         avg = data
-    log.debug("Promedios %f %f", avg.min(), avg.max())
+    log.debug("Promedios %s %f %f", var_name, avg.min(), avg.max())
     out_dict["escenario"] = "_base"
 
     items = dict(config.items(var_name))
@@ -54,6 +57,7 @@ def draw_base(filename, data_file, extent, year_ini, year_end,
                     linewidth=0.7)
     mymap.draw(pth.join(out_dir, out_tmpl % out_dict))
 
+
 def draw_steps_years(filename, data_file, extent, year_ini, year_end,
                      shape_file, shape_title, out_dir, steps=5):
     config = cfgParser.ConfigParser()
@@ -69,6 +73,10 @@ def draw_steps_years(filename, data_file, extent, year_ini, year_end,
     times = data.getTime().asComponentTime()
     yi, ye = times[0].year, times[-1].year
     out_dict["step"] = steps
+
+    # to mm/year
+    if var_name.startswith("PRE"):
+        data *= 12
 
     mymap = MPLMap(var_name, extent, **items)
     if var_name.startswith("PRE"):
@@ -124,7 +132,8 @@ def draw_compare_base(filename, cru_file, eta_file, extent, year_ini, year_end,
         #                                                             8*365, 17
         levels = [-800, -600, -400, -200] + \
                  [0, 200, 400, 600, 800]
-        data2 *= 365
+        data1 *= 12
+        data2 *= 12
     else:
         items["level_min"], items["level_max"], items["level_int"] = -5, 5, 11
     items["subtitle"] = "%s - %s: %s anual (1961 - 1990)" % (out_dict["model"].upper(),

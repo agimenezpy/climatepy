@@ -21,11 +21,15 @@ def get_data(filename, extent, year_ini, year_end, yearly=True):
     out_dict = {"sep": os.sep,
                 "period": "%d_%d" % (year_ini, year_end),
                 "step": (year_end - year_ini + 1)}
-    out_dict["model"], __, out_dict["escenario"] = \
-        pth.basename(filename).split("_")[0:3]
+    if filename.find("RCP8.5"):
+        out_dict["model"], _, _, out_dict["escenario"] = \
+            pth.basename(filename).split("_")[0:4]
+    else:
+        out_dict["model"], _, out_dict["escenario"] = \
+            pth.basename(filename).split("_")[0:3]
     with Dataset(filename) as data_set:
         varname = filter(lambda v: v in ('prec', 'tp2m', 'tmp', 'pre'),
-                     data_set.listvariables())[0]
+                         data_set.listvariables())[0]
         if yearly:
             data = data_set(varname, squeeze=1,
                             time=("%d-01-01" % year_ini,
@@ -46,14 +50,8 @@ def get_data(filename, extent, year_ini, year_end, yearly=True):
                 else:
                     last_data = data + last_data
             if varname not in ("prec", "pre"):
-                    last_data /= (1.*(year_end - year_ini + 1))  # Average instead of accumulation
+                last_data /= (1.*(year_end - year_ini + 1))  # Average instead of accumulation
 
-        if varname == 'prec':
-            data *= 1000  # To mm/day
-        elif varname == 'pre':
-            data /= 30  # To mm/day
-        elif varname in ('tp2m', 'mntp', 'mxtp') and data.max() > 200:
-            data -= 273  # To Celsius
     out_dict['var'] = varname
     return out_dict, data
 
@@ -83,7 +81,7 @@ def get_eta_data_month(root_dir, extent, filename, year_ini, year_end,
                  for fname in files]
 
     return get_data_wrapper(filename, extent, year_ini, year_end, files,
-                    yearly=False, remote=remote)
+                            yearly=False, remote=remote)
 
 
 def get_cru_data(extent, filename, year_ini, year_end):
@@ -98,8 +96,7 @@ def get_cru_data(extent, filename, year_ini, year_end):
                             remote=True)
 
 
-def get_data_wrapper(filename, extent, year_ini, year_end, files, yearly=True,
-             remote=False):
+def get_data_wrapper(filename, extent, year_ini, year_end, files, yearly=True, remote=False):
     def wrapper(fnc):
         def wrap_args(*args):
             config = cfgParser.ConfigParser()

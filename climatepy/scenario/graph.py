@@ -10,6 +10,7 @@ from climatepy.analysis.regression import aproximate_lineal, aproximate
 
 __author__ = 'agimenez'
 
+
 def draw_line_asc(filename, data_file,
                   model, escenario, year_ini, year_end, shape_file,
                   out_dir, map_key, name_prop, var_name, pos=1, title=""):
@@ -34,6 +35,8 @@ def draw_line_asc(filename, data_file,
         avg_data = data.values[:, idx]
 
         t = np.linspace(1, avg_data.shape[0], avg_data.shape[0])
+        if avg_data[avg_data < -999000].size > 0:
+            avg_data[avg_data < -999000] = avg_data[avg_data > -999000].mean()
         val = aproximate(t, avg_data)
         if val is None:
             val = aproximate_lineal(t, avg_data)
