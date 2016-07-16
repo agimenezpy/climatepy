@@ -5,7 +5,7 @@ import numpy as np
 import ConfigParser as cfgParser
 import logging as log
 from climatepy.figures import DateLineGraph
-from climatepy.scenario.export_xls import get_names
+from climatepy.scenario.export_xls import get_column_names
 from climatepy.analysis.regression import aproximate_lineal, aproximate
 
 __author__ = 'agimenez'
@@ -27,7 +27,7 @@ def draw_line_asc(filename, data_file,
     yi, ye = year_ini, year_end
     myline = DateLineGraph(var_name, (yi, ye+1), **items)
     data = pd.read_csv(data_file, index_col=0, header=0)
-    names = get_names(shape_file, data.columns, map_key, name_prop)
+    names = get_column_names(shape_file, data.columns, map_key, name_prop)
     for idx, key in enumerate(data.columns):
         clave, nombre = key, names[idx]
         clave = clave.split(".")[pos]
