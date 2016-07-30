@@ -14,21 +14,33 @@ def normalize(file_path):
     return pth.splitext(pth.basename(file_path))[0]
 
 
-def get_column_names(source_shp, columns, map_key, name_prop):
+def get_column_names(source_shp, map_key, name_prop):
     with fiona.open(source_shp) as collection:
         names_dict = {}
         for idx, shape in enumerate(collection):
-            names_dict[map_key % shape['properties']] = name_prop % shape['properties']
+            if isinstance(name_prop, tuple):
+                values = tuple([(prop % shape['properties']).encode("utf-8") for prop in name_prop])
+            else:
+                values = (name_prop % shape['properties']).encode("utf-8")
+            names_dict[map_key % shape['properties']] = values
 
-    names = [names_dict[claves].encode("utf-8") for claves in columns]
-    return names
+    return names_dict
+
+
+def get_name_value(name_value):
+    result = name_value
+    if isinstance(name_value, tuple):
+        result = " ".join(name_value)
+    return result.decode('utf-8', 'ignore')
 
 
 def get_dataframe(map_key, name_prop, source_data, source_shp):
     data = pd.read_csv(source_data, index_col=0, header=0, parse_dates=True)
     data.index = [idx.year for idx in data.index]
-    names = get_column_names(source_shp, data.columns, map_key, name_prop)
-    data.columns = [col.decode('utf-8', 'ignore') for col in names]
+    names = get_column_names(source_shp, map_key, name_prop)
+    values = [get_name_value(names[col]) for col in data.columns]
+
+    data.columns = values
     return data
 
 
@@ -69,7 +81,8 @@ def create_montly_xls(source_data, source_shp, dest_dir, map_key, name_prop):
     log.info("Loading data from %s" % source_data)
     data = pd.read_csv(source_data, index_col=0, header=0, parse_dates=True)
     names = get_column_names(source_shp, data.columns, map_key, name_prop)
-    data.columns = [col.decode('utf-8', 'ignore') for col in names]
+    values = [get_name_value(names[col]) for col in data.columns]
+    data.columns = values
     log.info("Writing excel %s" % dest_xls)
     with pd.ExcelWriter(dest_xls) as writer:
         for period in [(1961, 1990), (2011, 2020),

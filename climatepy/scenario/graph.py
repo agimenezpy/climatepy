@@ -27,11 +27,14 @@ def draw_line_asc(filename, data_file,
     yi, ye = year_ini, year_end
     myline = DateLineGraph(var_name, (yi, ye+1), **items)
     data = pd.read_csv(data_file, index_col=0, header=0)
-    names = get_column_names(shape_file, data.columns, map_key, name_prop)
+    names = get_column_names(shape_file, map_key, name_prop)
     for idx, key in enumerate(data.columns):
-        clave, nombre = key, names[idx]
-        clave = clave.split(".")[pos]
-        myline.set_title("%s - %s" % (title, unicode(nombre, "utf-8")))
+        clave, nombre = key, names[key]
+        if '.' in clave:
+            clave = clave.split(".")[pos]
+        if isinstance(nombre, tuple):
+            title, nombre = nombre
+        myline.set_title("%s - %s" % (title, nombre))
         avg_data = data.values[:, idx]
 
         t = np.linspace(1, avg_data.shape[0], avg_data.shape[0])
