@@ -80,14 +80,14 @@ def create_montly_xls(source_data, source_shp, dest_dir, map_key, name_prop):
         os.unlink(dest_xls)
     log.info("Loading data from %s" % source_data)
     data = pd.read_csv(source_data, index_col=0, header=0, parse_dates=True)
-    names = get_column_names(source_shp, data.columns, map_key, name_prop)
+    names = get_column_names(source_shp, map_key, name_prop)
     values = [get_name_value(names[col]) for col in data.columns]
     data.columns = values
     log.info("Writing excel %s" % dest_xls)
     with pd.ExcelWriter(dest_xls) as writer:
-        for period in [(1961, 1990), (2011, 2020),
-                       (2021, 2030), (2031, 2040),
-                       (2041, 2050)]:
+        for period in [(1961, 1990), (1991, 2010),
+                       (2011, 2020), (2021, 2030),
+                       (2031, 2040), (2041, 2050)]:
             time_frame = data.index[(data.index.year >= period[0]) &
                                     (data.index.year <= period[1])]
             subset = data.loc[time_frame.values, :]
@@ -114,9 +114,9 @@ def create_yearly_xls(source_data, source_shp, dest_dir, map_key, name_prop, ext
             extremos.loc[data[key] > p90, key] = "> p90=%.4f" % p90
     log.info("Writing excel %s" % dest_xls)
     with pd.ExcelWriter(dest_xls) as writer:
-        for period in [(1961, 1990), (2011, 2020),
-                       (2021, 2030), (2031, 2040),
-                       (2041, 2050)]:
+        for period in [(1961, 1990), (1991, 2010),
+                       (2011, 2020), (2021, 2030),
+                       (2031, 2040), (2041, 2050)]:
             subset = data.loc[period[0]:period[1], :]
             subset.T.to_excel(writer, sheet_name="%d_%d" % period)
         if extra_calc:
