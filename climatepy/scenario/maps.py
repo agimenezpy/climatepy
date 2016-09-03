@@ -1,12 +1,12 @@
-import os.path as pth
 import ConfigParser as cfgParser
 import logging as log
+import os.path as pth
 
 import numpy as np
 from regrid2 import Regridder
 
-from climatepy.scenario.data import get_data
 from climatepy.figures import MPLMap
+from climatepy.scenario.data import get_data
 
 __author__ = 'agimenez'
 
@@ -54,7 +54,7 @@ def draw_base(filename, data_file, extent, year_ini, year_end,
     shape_file, ext = pth.splitext(shape_file)
     shape_name = pth.basename(shape_file)
     mymap.add_shape(shape_name, shape_file, shape_title,
-                    linewidth=0.7)
+                    linewidth=0.7, color="#444444")
     mymap.draw(pth.join(out_dir, out_tmpl % out_dict))
 
 
@@ -97,8 +97,7 @@ def draw_steps_years(filename, data_file, extent, year_ini, year_end,
                           avg, items["unit"].decode("utf-8"))
         shape_file, ext = pth.splitext(shape_file)
         shape_name = pth.basename(shape_file)
-        mymap.add_shape(shape_name, shape_file, shape_title,
-                    linewidth=0.7)
+        mymap.add_shape(shape_name, shape_file, shape_title, linewidth=0.7, color="#444444")
         mymap.draw(pth.join(out_dir, out_tmpl % out_dict))
         mymap.clear()
 
@@ -153,5 +152,5 @@ def draw_compare_base(filename, cru_file, eta_file, extent, year_ini, year_end,
     shape_file, ext = pth.splitext(shape_file)
     shape_name = pth.basename(shape_file)
     mymap.add_shape(shape_name, shape_file, shape_title,
-                    linewidth=0.7)
+                    linewidth=0.7, color="#444444")
     mymap.draw(pth.join(out_dir, out_tmpl % out_dict))

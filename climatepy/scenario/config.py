@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from climatepy.grads.files import CtlConfig, CtlVar, CtlFile
+from six import u
+
+from climatepy.grads.files import CtlConfig, CtlVar
 
 __author__ = 'agimenez'
 
@@ -44,3 +46,8 @@ temp_var.unit = tmin_var.unit = tmax_var.unit = "(C)"
 temp_var.desc = "Shelter Temperature"
 tmin_var.desc = "Min Temperature"
 tmax_var.desc = "Max Temperature"
+
+conv = {
+    u("mm/día"): 1/365.0,
+    u("mm/año"): 1
+}

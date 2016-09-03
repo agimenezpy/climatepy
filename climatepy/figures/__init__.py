@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os.path as pth
+
 import matplotlib.pyplot as plt
 
 __author__ = 'agimenez'
@@ -8,7 +9,7 @@ __all__ = ["MPLMap", "DateLineGraph", "StyleMixin", "DrawMixin", "MonthLineGraph
 
 FIGURE_SIZE = [10.24, 7.68]
 FONT_SIZE = "medium"
-FONT_NAME = "serif"
+FONT_NAME = "Bitstream Vera Sans"
 FORMAT = "png"
 
 
@@ -16,10 +17,10 @@ class Style(object):
     __styles = {
         "axis": {"fontsize": "x-small", "linewidth": 0.5},
         "title": {"fontsize": "large"},
-        "suptitle": {"fontsize": 20, "color": "#8B2323", "family": "Verdana", "fontweight": "bold"},
+        "suptitle": {"fontsize": 20, "family": "Ubuntu", "fontweight": "bold"},
         "colorbar": {"fontsize": "small"},
         "colorline": {"fontsize": 8, "linewidth": 0.2},
-        "shapetext": {"fontsize": 10, "color": "k"}
+        "shapetext": {"fontsize": 12, "color": "k"}
     }
 
     def __init__(self, file_name):

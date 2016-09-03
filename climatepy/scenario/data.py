@@ -21,9 +21,10 @@ def get_data(filename, extent, year_ini, year_end, yearly=True):
     out_dict = {"sep": os.sep,
                 "period": "%d_%d" % (year_ini, year_end),
                 "step": (year_end - year_ini + 1)}
-    if filename.find("RCP8.5"):
+    if filename.find("RCP8.5") > 0:
         out_dict["model"], _, _, out_dict["escenario"] = \
             pth.basename(filename).split("_")[0:4]
+        out_dict["escenario"] = out_dict["escenario"].replace(".", "")
     else:
         out_dict["model"], _, out_dict["escenario"] = \
             pth.basename(filename).split("_")[0:3]

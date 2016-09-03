@@ -1,10 +1,12 @@
-import fiona
-import os
-from collections import OrderedDict
 import logging as log
+import os
 import os.path as pth
-import pandas as pd
+from collections import OrderedDict
+
+import fiona
 import numpy as np
+import pandas as pd
+
 from climatepy.analysis.regression import aproximate
 
 __author__ = 'agimenez'
@@ -34,7 +36,7 @@ def get_name_value(name_value):
     return result.decode('utf-8', 'ignore')
 
 
-def get_dataframe(map_key, name_prop, source_data, source_shp):
+def get_dataframe(source_data, source_shp, map_key, name_prop):
     data = pd.read_csv(source_data, index_col=0, header=0, parse_dates=True)
     data.index = [idx.year for idx in data.index]
     names = get_column_names(source_shp, map_key, name_prop)
@@ -99,7 +101,7 @@ def create_yearly_xls(source_data, source_shp, dest_dir, map_key, name_prop, ext
     if pth.exists(dest_xls):
         os.unlink(dest_xls)
     log.info("Loading data from %s" % source_data)
-    data = get_dataframe(map_key, name_prop, source_data, source_shp)
+    data = get_dataframe(source_data, source_shp, map_key, name_prop)
     if extra_calc:
         period = data.index[data.index > 2010]
         tendencia = pd.DataFrame(index=period, columns=data.columns)

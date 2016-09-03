@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-import matplotlib.pyplot as plt
-from matplotlib.dates import YearLocator, DateFormatter
-import datetime
-import numpy as np
 import abc
-from climatepy.figures import StyleMixin, DrawMixin
-from calendar import month_name
+import datetime
 import locale
 import sys
+from calendar import month_name
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.dates import YearLocator, DateFormatter
+
+from climatepy.figures import StyleMixin, DrawMixin
 
 __author__ = 'agimenez'
 
@@ -37,7 +39,7 @@ class DateLineGraph(LineGraph):
         self.clear()
 
     def add_legend(self, legend, alpha=1):
-        leg = self.axes.legend(loc="upper center", shadow=True)
+        leg = self.axes.legend(legend, loc="upper center", shadow=True)
         leg.get_frame().set_alpha(alpha)
 
     def set_title(self, in_str):

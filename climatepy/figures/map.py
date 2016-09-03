@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+import abc
+from os import path as pth
+
+import fiona
 import matplotlib.cm as cmap
 import matplotlib.pyplot as plt
 import mpl_toolkits.basemap as bmap
-from shapely.geometry import shape
-from climatepy.figures import (StyleMixin, DrawMixin, FIGURE_SIZE, FONT_NAME,
-                               FONT_SIZE, FORMAT)
-from os import path as pth
 import numpy as np
-import abc
-import fiona
-
 from matplotlib import rcParams
+from shapely.geometry import shape
+
+from climatepy.figures import (StyleMixin, DrawMixin, FIGURE_SIZE, FONT_NAME,
+                               FONT_SIZE)
+
 rcParams['legend.fontsize'] = FONT_SIZE
 rcParams['font.family'] = FONT_NAME
 rcParams['ytick.labelsize'] = "small"
@@ -81,14 +83,14 @@ class MPLMap(BaseMap):
                     x, y = geom["coordinates"][0], geom["coordinates"][1]
                 else:
                     geom = shape(geom).centroid
-                    x, y = geom.xy[0], geom.xy[1]
+                    x, y = geom.xy[0][0], geom.xy[1][0]
                 if (x < self.bounds[0] or x > self.bounds[2]) or \
                         (y < self.bounds[1] or y > self.bounds[3]):
                     continue
                 if points:
                     self.axes.plot(x, y, 'o', color='#cccccc')
                 self.axes.text(x, y,
-                               row["properties"][field_name].replace(" ", "\n"),
+                               (field_name % row["properties"]).replace(" ", "\n"),
                                ha="center", va="center", rotation=0,
                                **sty)
 
@@ -108,7 +110,7 @@ class MPLMap(BaseMap):
         cbar = self.figure.colorbar(cs, ticks=cs.levels, drawedges=True,
                                     shrink=0.78, pad=0.01)
         if isinstance(unit, basestring) or isinstance(unit, unicode):
-            cbar.set_label(unit, position=(0, 1), rotation="horizontal",
+            cbar.set_label(unit, position=(0, 1), rotation="vertical",
                            **MPLMap.style("colorbar"))
         if lines:
             color_map = self.color_line
@@ -137,7 +139,7 @@ class MPLMap(BaseMap):
                                labels=[0, 0, 0, 1], **MPLMap.style("axis"))
         self.axes.set_xlim(self.bounds[0], self.bounds[2])
         self.axes.set_ylim(self.bounds[1], self.bounds[3])
-        #self.axes.set_xlabel("\n\nlongitud")
-        #self.axes.set_ylabel("latitud\n\n")
+        self.axes.set_xlabel("\n\nlongitud")
+        self.axes.set_ylabel("latitud\n\n")
         #self.figure.suptitle(self.title, **MPLMap.style("suptitle"))
 
