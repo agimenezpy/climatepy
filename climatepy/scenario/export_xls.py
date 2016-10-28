@@ -1,11 +1,12 @@
+import fiona
+import locale
 import logging as log
+import numpy as np
 import os
 import os.path as pth
-from collections import OrderedDict
-
-import fiona
-import numpy as np
 import pandas as pd
+from calendar import month_name
+from collections import OrderedDict
 
 from climatepy.analysis.regression import aproximate
 
@@ -124,3 +125,16 @@ def create_yearly_xls(source_data, source_shp, dest_dir, map_key, name_prop, ext
         if extra_calc:
             tendencia.T.to_excel(writer, sheet_name="Tendencia")
             extremos.T.to_excel(writer, sheet_name="Extremos")
+
+
+def create_cru_xls(source_data, source_shp, dest_dir, map_key, name_prop):
+    dest_xls = pth.join(dest_dir, normalize(source_data) + ".xlsx")
+    if pth.exists(dest_xls):
+        os.unlink(dest_xls)
+    log.info("Loading data from %s" % source_data)
+    data = get_dataframe(source_data, source_shp, map_key, name_prop)
+    log.info("Writing excel %s" % dest_xls)
+    locale.setlocale(locale.LC_ALL, "Spanish")
+    data.index = [month_name[i] for i in range(1, 13)]
+    with pd.ExcelWriter(dest_xls) as writer:
+        data.T.to_excel(writer)

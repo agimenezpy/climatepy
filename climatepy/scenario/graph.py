@@ -1,13 +1,13 @@
 import ConfigParser as cfgParser
 import logging as log
-import os
-from os import path as pth
-
 import numpy as np
+import os
 import pandas as pd
+from os import path as pth
 
 from climatepy.analysis.regression import aproximate_lineal, aproximate
 from climatepy.figures import DateLineGraph
+from climatepy.figures.line import MonthLineGraph
 from climatepy.scenario.export_xls import get_column_names
 
 __author__ = 'agimenez'
@@ -58,5 +58,38 @@ def draw_line_asc(filename, data_file,
         myline.add_line(avg_data, color, label=out_dict["escenario"])
         myline.add_line(val, 'k')
         myline.add_legend([escenario, "Tendencia"], 0.5)
+        myline.draw(pth.join(out_dir, out_tmpl % out_dict))
+        myline.clear()
+
+
+def draw_bar_xls(filename, data_file1, data_file2, var_name1, var_name2, shape_file,
+                 out_dir, map_key, name_prop, pos=1, title=""):
+    config = cfgParser.ConfigParser()
+    config.read(filename)
+    var_name1 = var_name1.upper()
+    var_name2 = var_name2.upper()
+    out_dict = {"sep": os.sep, "period": "1961_1990",
+                "step": "",
+                'var': var_name1,
+                "model": "ETA_CRU",
+                "escenario": ""}
+    out_tmpl = config.get("COMMON", 'out_tmpl', True)
+    items = dict(config.items(var_name1))
+    myline = MonthLineGraph(var_name1, **items)
+    avg_data1 = pd.read_excel(data_file1, index_col=0, header=0, sheetname=var_name1)
+    avg_data2 = pd.read_excel(data_file2, index_col=0, header=0, sheetname=var_name2)
+    names = get_column_names(shape_file, map_key, name_prop)
+    for key in names.keys():
+        if key == "PY.AS":
+            continue
+        clave, nombre = key, names[key]
+        depto = unicode(nombre, "utf-8")
+        if '.' in clave:
+            clave = clave.split(".")[pos]
+        myline.set_title("%s - %s" % (title, depto))
+        myline.add_bar(avg_data1.loc[depto, :], 'b')
+        myline.add_line(avg_data2.loc[depto, :], 'r')
+        myline.add_legend(("ETA", "CRU"), 0.5)
+        out_dict["region"] = clave
         myline.draw(pth.join(out_dir, out_tmpl % out_dict))
         myline.clear()

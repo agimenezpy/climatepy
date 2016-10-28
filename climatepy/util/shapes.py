@@ -1,20 +1,21 @@
+import fiona
+import glob
+import logging as log
 import os
 import os.path as pth
-import glob
 from collections import OrderedDict
-import logging as log
 
-import fiona
-
-from climatepy.scenario.geo import PARAGUAY
 from climatepy.data import *
+from climatepy.scenario.geo import PARAGUAY
 
 __author__ = 'agimenez'
+
 
 def clean_shp(dest_dir):
     files = pth.splitext(dest_dir)[0] + ".*"
     for filep in glob.glob(files):
         os.unlink(filep)
+
 
 def to_dict(poly):
     return {"type": "Polygon", "coordinates": poly}
@@ -68,10 +69,13 @@ def create_masks(source_ds, source_shp, extent=PARAGUAY, key="%(PART)s",
                  cell_size=0.1):
     if pth.exists(source_shp):
         with Dataset(source_ds) as dset:
+            var_name = dset.listvariables()[0]
+            cur_var = dset.variables.get(var_name, False)
+            time_array = cur_var.getTime().asComponentTime()
             bound_lat = (extent[0][1], extent[1][1])
             bound_lon = (extent[0][0], extent[1][0])
-            data = dset(dset.listvariables()[0], squeeze=1,
-                        time='1961-01-01', latitude=bound_lat,
+            data = dset(var_name, squeeze=1,
+                        time=time_array[0], latitude=bound_lat,
                         longitude=bound_lon)
             log.info(data.shape)
             mascara = ShapeMask(source_shp, key, data.getLongitude()[:],
