@@ -1,8 +1,7 @@
 import ConfigParser as cfgParser
 import logging as log
-import os.path as pth
-
 import numpy as np
+import os.path as pth
 from regrid2 import Regridder
 
 from climatepy.figures import MPLMap
@@ -88,7 +87,6 @@ def draw_steps_years(filename, data_file, extent, year_ini, year_end,
                                                        items["title"].decode("utf-8"),
                                                        year, year + steps - 1))
         out_dict["period"] = "%d_%d" % (year, year + steps - 1)
-        #idxs, idxe = year - yi, year - yi + steps
         idxs, idxe = idx*steps, idx*steps + steps
         avg = np.average(data[idxs:idxe, :, :], axis=0)
         log.debug("%s: %f %f %d %d", out_dict["period"],
@@ -124,11 +122,9 @@ def draw_compare_base(filename, cru_file, eta_file, extent, year_ini, year_end,
     var_name = out_dict['var'].upper()
     out_tmpl = config.get("COMMON", 'out_tmpl', True)
     items = dict(config.items(var_name))
-    # items["title"] = "%s vs %s - %s" % (eta_out[1]["model"].upper(), cru_out[1]["model"].upper(), items["title"])
     levels = None
     if var_name.startswith("PRE"):
-        #items["level_min"], items["level_max"], items["level_int"] = -8*365, \
-        #                                                             8*365, 17
+
         levels = [-800, -600, -400, -200] + \
                  [0, 200, 400, 600, 800]
         data1 *= 12
@@ -154,3 +150,54 @@ def draw_compare_base(filename, cru_file, eta_file, extent, year_ini, year_end,
     mymap.add_shape(shape_name, shape_file, shape_title,
                     linewidth=0.7, color="#444444")
     mymap.draw(pth.join(out_dir, out_tmpl % out_dict))
+
+
+def draw_proj_anomalia(filename, proj_file, extent, year_ini, year_end,
+                       shape_file, shape_title, out_dir, steps=10):
+    config = cfgParser.ConfigParser()
+    config.read(filename)
+    out_dict, eta_out = get_data(proj_file, extent, 1961, 1990)
+    proj_dict, proj_out = get_data(proj_file, extent, year_ini, year_end)
+
+    out_dict["escenario"] += "_anomalia"
+    var_name = out_dict['var'].upper()
+    out_tmpl = config.get("COMMON", 'out_tmpl', True)
+    times = proj_out.getTime().asComponentTime()
+    yi, ye = times[0].year, times[-1].year
+    items = dict(config.items(var_name))
+    out_dict["step"] = steps
+
+    if len(eta_out.shape) > 2:
+        data2 = np.average(eta_out, axis=0)
+    else:
+        data2 = eta_out
+
+    data = proj_out
+    for idx, year in enumerate(xrange(yi, ye, steps)):
+        idxs, idxe = idx * steps, idx * steps + steps
+        data1 = np.average(data[idxs:idxe, :, :], axis=0)
+        avg = data1 - data2
+        levels = None
+        if var_name.startswith("PRE"):
+            levels = [-800, -600, -400, -200] + \
+                     [0, 200, 400, 600, 800]
+            avg *= 12
+        else:
+            items["level_min"], items["level_max"], items["level_int"] = -7, 7, 15
+        log.debug("%s Max and min %f %f", data1.shape, avg.min(), avg.max())
+        items["subtitle"] = "Anomalia de la %s anual (%d - %d)" % (items["title"].decode("utf-8"),
+                                                                   year, year + steps - 1)
+        out_dict["period"] = "%d_%d" % (year, year + steps - 1)
+
+        mymap = MPLMap(var_name, extent, **items)
+        if levels is not None:
+            mymap.levels = levels
+
+        mymap.set_title(items["subtitle"])
+        mymap.add_contour(data.getLongitude(), data.getLatitude(),
+                          avg, items["unit"].decode("utf-8"), alt=True)
+        shape_file, ext = pth.splitext(shape_file)
+        shape_name = pth.basename(shape_file)
+        mymap.add_shape(shape_name, shape_file, shape_title,
+                        linewidth=0.7, color="#444444")
+        mymap.draw(pth.join(out_dir, out_tmpl % out_dict))
